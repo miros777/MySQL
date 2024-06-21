@@ -1,0 +1,95 @@
+use user987789;
+
+
+# найти все машины старше 2000 г
+    select * from cars where year > 2000;
+# найти все машины младше 2015 г
+    select * from cars where year < 2015;
+# найти все машины 2008, 2009, 2010 годов
+    select * from cars where year in (2008, 2009, 2010);
+# найти все машины не с этих годов 2008, 2009, 2010 годов
+    select * from cars where year not in (2008, 2009, 2010);
+# найти все машины год которых совпадает с ценой
+    select * from cars where year = price;
+# найти все машины bmw старше 2014 года
+    select * from cars where year > 2014 and model='bmw';
+# найти все машины audi младше 2014 года
+    select * from cars where year < 2014 and model='audi';
+# найти первые 5 машин
+    select * from cars limit 5;
+# найти последние 5 машин
+    select * from cars order by id desc limit 5;
+# найти среднее арифметическое цен машин модели KIA
+    select avg(price) as midPrice from cars where model='kia';
+# найти среднее арифметическое цен каждой машины
+    select avg(price) as midPrice, model from cars group by model;
+# посчитать количество каждой марки машин
+    select count(*) as count, model from cars group by model;
+# найти марку машины количество которых больше всего
+select count(*) as count, model from cars group by model order by count desc limit 1;
+# найти все машины в модели которых вторая и предпоследняя буква "а"
+    select * from cars where model like '_a%a';
+# найти все машины модели которых больше 8 символов
+    select * from cars where length(model) > 8;
+
+# ***найти машины цена которых больше чем цена среднего арифметического всех машин
+select model, price from cars where (select avg(price) as avgP from cars) < cars.price;
+#################################################################
+
+# 1.Вибрати усіх клієнтів, чиє ім'я має менше ніж 6 символів.
+select * from users where length(name) < 6;
+# 2.Вибрати львівські відділення банку.
+select * from department where DepartmentCity='Lviv';
+# 3.Вибрати клієнтів з вищою освітою та посортувати по прізвищу.
+select * from client where Education='high';
+# 4.Виконати сортування у зворотньому порядку над таблицею Заявка і вивести 5 останніх елементів.
+select * from application order by idApplication desc limit 5;
+# 5.Вивести усіх клієнтів, чиє прізвище закінчується на OV чи OVA.
+select * from client where LastName like '%OV' or '%OVA';
+# 6.Вивести клієнтів банку, які обслуговуються київськими відділеннями.
+select * from client where Department_idDepartment=1 or Department_idDepartment=4;
+# 7.Знайти унікальні імена клієнтів.
+select count(*) as count, FirstName from client group by FirstName having count=1;
+select distinct client.LastName from client;
+# 8.Вивести дані про клієнтів, які мають кредит більше ніж на 5000 гривень.
+select * from client c join application a on c.idClient = a.Client_idClient where a.Sum > 5000;
+# 9.Порахувати кількість клієнтів усіх відділень та лише львівських відділень.
+select count(*) as count, LastName from client where Department_idDepartment=5 or Department_idDepartment=2 group by LastName;
+select count(*) as count, LastName from client join department where client.Department_idDepartment=department.idDepartment group by LastName;
+# 10.Знайти кредити, які мають найбільшу суму для кожного клієнта окремо.
+select * from client join application a on client.idClient = a.Client_idClient where (select max(Sum) from application) > Sum;
+# 11. Визначити кількість заявок на кредити для кожного клієнта.
+select count(*) as countCreditAplications, LastName, FirstName from application join client on client.idClient = application.Client_idClient group by Client_idClient;
+# 12. Визначити найбільший та найменший кредити.
+select FirstName, LastName, application.Sum
+from client join application on client.idClient = application.Client_idClient where (select max(Sum) as Max from  application) >= application.Sum and (select min(Sum) from  application) <= application.Sum;
+select max(Sum), min(Sum) from application;
+# 13. Порахувати кількість кредитів для клієнтів,які мають вищу освіту.
+select count(*), LastName from application join client on application.Client_idClient = client.idClient where client.Education='high' group by LastName;
+# 14. Вивести дані про клієнта, в якого середня сума кредитів найвища.
+select * from client join application on client.idClient = application.Client_idClient where (select avg(application.Sum)) > 0 group by application.Client_idClient;
+# 15. Вивести відділення, яке видало в кредити найбільше грошей
+select  * from department where CountOfWorkers
+# 16. Вивести відділення, яке видало найбільший кредит.
+#
+# 17. Усім клієнтам, які мають вищу освіту, встановити усі їхні кредити у розмірі 6000 грн.
+#
+# 18. Усіх клієнтів київських відділень пересилити до Києва.
+#
+# 19. Видалити усі кредити, які є повернені.
+#
+# 20. Видалити кредити клієнтів, в яких друга літера прізвища є голосною.
+#
+# 21.Знайти львівські відділення, які видали кредитів на загальну суму більше ніж 5000
+#
+# 22.Знайти клієнтів, які повністю погасили кредити на суму більше ніж 5000
+#
+# 23.Знайти максимальний неповернений кредит.
+#
+# 24.Знайти клієнта, сума кредиту якого найменша
+#
+# 25.Знайти кредити, сума яких більша за середнє значення усіх кредитів
+#
+# 26. Знайти клієнтів, які є з того самого міста, що і клієнт, який взяв найбільшу кількість кредитів
+#
+# 27. Місто клієнта з найбільшою кількістю кредитів
